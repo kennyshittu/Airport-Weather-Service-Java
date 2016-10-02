@@ -1,5 +1,7 @@
 package com.crossover.trial.weather;
 
+import com.crossover.trial.weather.controllers.WeatherCollectorEndpoint;
+import com.crossover.trial.weather.controllers.WeatherQueryEndpoint;
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -37,7 +39,7 @@ public class DoNotChangeTest {
     private WeatherQueryEndpoint queryEndpoint;
 
     /**
-     * The compile time interface validator for WeatherCollector. This method will NEVER been called, 
+     * The compile time interface validator for WeatherCollector. This method will NEVER been called,
      * but must compile.
      */
     private void validateInterfaceWeatherCollector() {

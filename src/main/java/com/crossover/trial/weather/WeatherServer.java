@@ -1,9 +1,12 @@
 package com.crossover.trial.weather;
 
+import com.crossover.trial.weather.daos.WeatherDao;
+import com.crossover.trial.weather.controllers.WeatherCollectorEndpointImpl;
+import com.crossover.trial.weather.controllers.WeatherQueryEndpointImpl;
+import com.crossover.trial.weather.services.WeatherService;
 import org.glassfish.grizzly.Connection;
 import org.glassfish.grizzly.http.server.*;
-import org.glassfish.grizzly.nio.transport.TCPNIOTransport;
-import org.glassfish.grizzly.threadpool.ThreadPoolConfig;
+import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
@@ -30,21 +33,29 @@ public class WeatherServer {
             System.out.println("Starting Weather App local testing server: " + BASE_URL);
 
             final ResourceConfig resourceConfig = new ResourceConfig();
-            resourceConfig.register(RestWeatherCollectorEndpoint.class);
-            resourceConfig.register(RestWeatherQueryEndpoint.class);
+            resourceConfig.register(WeatherCollectorEndpointImpl.class);
+            resourceConfig.register(WeatherQueryEndpointImpl.class);
+            resourceConfig.register(new AbstractBinder() {
+                @Override protected void configure() {
+                    bind(WeatherDao.class).to(WeatherDao.class);
+                    bind(WeatherService.class).to(WeatherService.class);
+                }
+            });
 
-            HttpServer server = GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URL), resourceConfig, false);
+            HttpServer server = GrizzlyHttpServerFactory
+                .createHttpServer(URI.create(BASE_URL), resourceConfig, false);
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 server.shutdownNow();
             }));
 
             HttpServerProbe probe = new HttpServerProbe.Adapter() {
-                public void onRequestReceiveEvent(HttpServerFilter filter, Connection connection, Request request) {
+                public void onRequestReceiveEvent(HttpServerFilter filter, Connection connection,
+                    Request request) {
                     System.out.println(request.getRequestURI());
                 }
             };
-            server.getServerConfiguration().getMonitoringConfig().getWebServerConfig().addProbes(probe);
-
+            server.getServerConfiguration().getMonitoringConfig().getWebServerConfig()
+                .addProbes(probe);
 
             // the autograder waits for this output before running automated tests, please don't remove it
             server.start();

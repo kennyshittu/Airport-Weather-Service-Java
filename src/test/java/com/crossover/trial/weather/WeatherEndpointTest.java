@@ -1,79 +1,83 @@
 package com.crossover.trial.weather;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.verify;
+
+import com.crossover.trial.weather.controllers.WeatherCollectorEndpointImpl;
+import com.crossover.trial.weather.controllers.WeatherQueryEndpoint;
+import com.crossover.trial.weather.controllers.WeatherQueryEndpointImpl;
+import com.crossover.trial.weather.services.WeatherService;
+import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 public class WeatherEndpointTest {
 
-    private WeatherQueryEndpoint _query = new RestWeatherQueryEndpoint();
+    @Mock private WeatherService weatherService;
 
-    private WeatherCollectorEndpoint _update = new RestWeatherCollectorEndpoint();
+    private WeatherQueryEndpointImpl queryEndpoint = new WeatherQueryEndpointImpl();
 
-    private Gson _gson = new Gson();
+    private WeatherCollectorEndpointImpl collectorEndpoint = new WeatherCollectorEndpointImpl();
 
-    private DataPoint _dp;
-    @Before
-    public void setUp() throws Exception {
-        RestWeatherQueryEndpoint.init();
-        _dp = new DataPoint.Builder()
-                .withCount(10).withFirst(10).withMedian(20).withLast(30).withMean(22).build();
-        _update.updateWeather("BOS", "wind", _gson.toJson(_dp));
-        _query.weather("BOS", "0").getEntity();
+    @Before public void setUp() throws Exception {
+        configure();
+        queryEndpoint.setWeatherService(weatherService);
+        collectorEndpoint.setWeatherService(weatherService);
     }
 
-    @Test
-    public void testPing() throws Exception {
-        String ping = _query.ping();
-        JsonElement pingResult = new JsonParser().parse(ping);
-        assertEquals(1, pingResult.getAsJsonObject().get("datasize").getAsInt());
-        assertEquals(5, pingResult.getAsJsonObject().get("iata_freq").getAsJsonObject().entrySet().size());
+    @Test public void testPing() throws Exception {
+        queryEndpoint.ping();
+        verify(weatherService, only()).getPingData();
     }
 
-    @Test
-    public void testGet() throws Exception {
-        List<AtmosphericInformation> ais = (List<AtmosphericInformation>) _query.weather("BOS", "0").getEntity();
-        assertEquals(ais.get(0).getWind(), _dp);
+    @Test public void testGet() throws Exception {
+        queryEndpoint.weather(anyString(), anyString());
+        verify(weatherService, only()).getWeather(anyString(), anyString());
     }
 
-    @Test
-    public void testGetNearby() throws Exception {
-        // check datasize response
-        _update.updateWeather("JFK", "wind", _gson.toJson(_dp));
-        _dp.setMean(40);
-        _update.updateWeather("EWR", "wind", _gson.toJson(_dp));
-        _dp.setMean(30);
-        _update.updateWeather("LGA", "wind", _gson.toJson(_dp));
-
-        List<AtmosphericInformation> ais = (List<AtmosphericInformation>) _query.weather("JFK", "200").getEntity();
-        assertEquals(3, ais.size());
+    @Test public void testGetNearby() throws Exception {
+        collectorEndpoint.updateWeather(anyString(), anyString(), anyString());
+        verify(weatherService, only()).addDataPoint(anyString(), anyString(), any());
     }
 
-    @Test
-    public void testUpdate() throws Exception {
+    @Test public void testGetAirport() throws Exception {
+        collectorEndpoint.getAirport(anyString());
+        verify(weatherService, only()).findAirportData(anyString());
 
-        DataPoint windDp = new DataPoint.Builder()
-                .withCount(10).withFirst(10).withMedian(20).withLast(30).withMean(22).build();
-        _update.updateWeather("BOS", "wind", _gson.toJson(windDp));
-        _query.weather("BOS", "0").getEntity();
+    }
 
-        String ping = _query.ping();
-        JsonElement pingResult = new JsonParser().parse(ping);
-        assertEquals(1, pingResult.getAsJsonObject().get("datasize").getAsInt());
+    @Test public void testGetAirports() throws Exception {
+        collectorEndpoint.getAirports();
+        verify(weatherService, only()).getAirportData();
 
-        DataPoint cloudCoverDp = new DataPoint.Builder()
-                .withCount(4).withFirst(10).withMedian(60).withLast(100).withMean(50).build();
-        _update.updateWeather("BOS", "cloudcover", _gson.toJson(cloudCoverDp));
+    }
 
-        List<AtmosphericInformation> ais = (List<AtmosphericInformation>) _query.weather("BOS", "0").getEntity();
-        assertEquals(ais.get(0).getWind(), windDp);
-        assertEquals(ais.get(0).getCloudCover(), cloudCoverDp);
+    @Test public void testAddAirport() throws Exception {
+        collectorEndpoint
+            .addAirport(anyString(), String.valueOf(anyDouble()), String.valueOf(anyDouble()));
+        verify(weatherService, only()).addAirport(anyString(), anyDouble(), anyDouble());
+    }
+
+    //    @Test public void deleteAirport() throws Exception {
+    //        collectorEndpoint.deleteAirport(anyString());
+    //        verify(weatherService, only()).getAirportData();
+    //
+    //    }
+
+    public ResourceConfig configure() {
+        MockitoAnnotations.initMocks(this);
+        return new ResourceConfig().register(WeatherQueryEndpoint.class)
+            .register(new AbstractBinder() {
+                @Override protected void configure() {
+                    bind(weatherService).to(WeatherService.class);
+                }
+            });
     }
 
 }
