@@ -3,6 +3,7 @@ package com.crossover.trial.weather.controllers;
 import com.crossover.trial.weather.services.WeatherService;
 import com.google.gson.Gson;
 
+import javax.annotation.Resources;
 import javax.inject.Inject;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;

@@ -14,9 +14,9 @@ public class DataPoint {
 
     public int first = 0;
 
-    public int second = 0;
+    public int median = 0;
 
-    public int third = 0;
+    public int last = 0;
 
     public int count = 0;
 
@@ -26,11 +26,11 @@ public class DataPoint {
     private DataPoint() {
     }
 
-    protected DataPoint(int first, int second, int mean, int third, int count) {
+    protected DataPoint(int first, int median, double mean, int last, int count) {
         this.setFirst(first);
         this.setMean(mean);
-        this.setSecond(second);
-        this.setThird(third);
+        this.setMedian(median);
+        this.setLast(last);
         this.setCount(count);
     }
 
@@ -59,23 +59,23 @@ public class DataPoint {
     /**
      * 2nd quartile -- median value
      */
-    public int getSecond() {
-        return second;
+    public int getMedian() {
+        return median;
     }
 
-    protected void setSecond(int second) {
-        this.second = second;
+    protected void setMedian(int median) {
+        this.median = median;
     }
 
     /**
      * 3rd quartile value -- less noisy upper value
      */
-    public int getThird() {
-        return third;
+    public int getLast() {
+        return last;
     }
 
-    protected void setThird(int third) {
-        this.third = third;
+    protected void setLast(int last) {
+        this.last = last;
     }
 
     /**
@@ -99,7 +99,7 @@ public class DataPoint {
 
     static public class Builder {
         int first;
-        int mean;
+        double mean;
         int median;
         int last;
         int count;
@@ -112,7 +112,7 @@ public class DataPoint {
             return this;
         }
 
-        public Builder withMean(int mean) {
+        public Builder withMean(double mean) {
             this.mean = mean;
             return this;
         }
@@ -133,7 +133,7 @@ public class DataPoint {
         }
 
         public DataPoint build() {
-            return new DataPoint(this.first, this.mean, this.median, this.last, this.count);
+            return new DataPoint(this.first, this.median, this.mean,this.last, this.count);
         }
     }
 }

@@ -7,6 +7,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
 import com.crossover.trial.weather.domains.DataPoint;
+import org.json.JSONObject;
 
 /**
  * A reference implementation for the weather client. Consumers of the REST API can look at WeatherClient
@@ -74,7 +75,9 @@ public class WeatherClient {
         WebTarget path = collect.path("/weather/BOS/" + pointType);
         DataPoint dp = new DataPoint.Builder().withFirst(first).withLast(last).withMean(mean)
             .withMedian(median).withCount(count).build();
-        Response post = path.request().post(Entity.entity(dp, "application/json"));
+        JSONObject jsonObj = new JSONObject( dp );
+        Response post = path.request().post(Entity.entity(jsonObj.toString(), "application/json"));
+
     }
 
     public void exit() {

@@ -75,6 +75,8 @@ import org.glassfish.jersey.process.internal.RequestScoped;
 
     public void addDataPoint(String iataCode, String pointType, DataPoint dp)
         throws WeatherException {
+//        LOGGER.info("reached here last");
+        System.out.println("reached inside add data point 1");
         int airportDataIdx = weatherDao.getAirportDataIdx(iataCode);
         AtmosphericInformation ai = weatherDao.getAtmosphericInformation(airportDataIdx);
         weatherDao.updateAtmosphericInformation(ai, pointType, dp);
@@ -83,5 +85,9 @@ import org.glassfish.jersey.process.internal.RequestScoped;
 
     public AirportData findAirportData(String iataCode) {
         return weatherDao.findAirportData(iataCode);
+    }
+
+    public void deleteAirport(String iataCode) {
+        weatherDao.deleteAirport(iataCode);
     }
 }

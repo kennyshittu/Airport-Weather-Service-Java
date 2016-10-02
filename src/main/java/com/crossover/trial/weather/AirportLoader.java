@@ -2,7 +2,10 @@ package com.crossover.trial.weather;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.*;
 
 /**
@@ -20,10 +23,12 @@ public class AirportLoader {
     public static final int IATA_INDEX = 4;
     public static final int ICAO_INDEX = 5;
     public static final int LAT_INDEX = 6;
-    public static final int LOG_INDEX = 7;
+    public static final int LONG_INDEX = 7;
     public static final int ALT_INDEX = 8;
     public static final int TIMEZONE_INDEX = 9;
     public static final int DST_INDEX = 10;
+
+    private static final String BASE_URI = "http://localhost:9090";
     /**
      * end point for read queries
      */
@@ -36,8 +41,8 @@ public class AirportLoader {
 
     public AirportLoader() {
         Client client = ClientBuilder.newClient();
-        query = client.target("http://localhost:8080/query");
-        collect = client.target("http://localhost:8080/collect");
+        query = client.target(BASE_URI + "/query");
+        collect = client.target(BASE_URI);
     }
 
     public static void main(String args[]){
@@ -63,18 +68,11 @@ public class AirportLoader {
         String splitBy = ",";
         while ((l = reader.readLine()) != null) {
             String[] b = l.split(splitBy);
-            System.out.println(b[0]);
-            System.out.println(b[NAME_INDEX]);
-            System.out.println(b[CITY_INDEX]);
-            System.out.println(b[COUNTRY_INDEX]);
-            System.out.println(b[IATA_INDEX]);
-            System.out.println(b[ICAO_INDEX]);
-            System.out.println(b[LAT_INDEX]);
-            System.out.println(b[LOG_INDEX]);
-            System.out.println(b[ALT_INDEX]);
-            System.out.println(b[TIMEZONE_INDEX]);
-            System.out.println(b[DST_INDEX]);
-            break;
+            WebTarget path = collect.path("/collect/airport/tesr/ts/ts");
+            Response post = path.request(MediaType.TEXT_PLAIN_TYPE)
+                .post(Entity.entity("A string entity to be POSTed", MediaType.TEXT_PLAIN));
+//            Response post = path.request().post(Entity.entity(null, "application/json"));
+            System.out.println("kenny shittu");
         }
     }
 }

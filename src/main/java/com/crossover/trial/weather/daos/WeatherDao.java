@@ -110,12 +110,21 @@ import org.glassfish.jersey.process.internal.RequestScoped;
      * @return airport data or null if not found
      */
     public int getAirportDataIdx(String iataCode) {
+        System.out.println("get airport data idx 2");
         AirportData ad = findAirportData(iataCode);
         return airportData.indexOf(ad);
     }
 
     public AtmosphericInformation getAtmosphericInformation(int idx) {
+        System.out.println("got inside get atmo info. 3");
         return atmosphericInformation.get(idx);
+    }
+
+    public void deleteAirport(String iataCode) {
+       AirportData ad = findAirportData(iataCode);
+        int idx = getAirportDataIdx(iataCode);
+        airportData.remove(ad);
+        atmosphericInformation.remove(idx);
     }
 
     public List<AtmosphericInformation> getAtmosphericInformationByRadius(String iata,
@@ -175,12 +184,18 @@ import org.glassfish.jersey.process.internal.RequestScoped;
 
     public void updateAtmosphericInformation(AtmosphericInformation ai, String pointType,
         DataPoint dp) throws WeatherException {
+        System.out.println("reached here too , update atmo info 4");
+
         final DataPointType dptype = DataPointType.valueOf(pointType.toUpperCase());
 
+        System.out.println("ai : " + ai);
         if (pointType.equalsIgnoreCase(DataPointType.WIND.name())) {
+            System.out.println("reached here inside, update atmo info 5");
+
             if (dp.getMean() >= 0) {
                 ai.setWind(dp);
                 ai.setLastUpdateTime(System.currentTimeMillis());
+                System.out.println("ai : 6" + ai);
                 return;
             }
         }
