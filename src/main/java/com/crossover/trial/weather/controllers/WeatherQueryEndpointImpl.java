@@ -3,9 +3,10 @@ package com.crossover.trial.weather.controllers;
 import com.crossover.trial.weather.services.WeatherService;
 import com.google.gson.Gson;
 
-import javax.annotation.Resources;
 import javax.inject.Inject;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import java.util.logging.Logger;
 
@@ -16,14 +17,14 @@ import java.util.logging.Logger;
  *
  * @author code test administrator
  */
-@Path("/query") public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
+@Path("/query") public final class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
 
     public final static Logger LOGGER = Logger.getLogger("WeatherQuery");
 
     /**
-     * shared gson json to object factory
+     * shared GSON json to object factory
      */
-    public static final Gson gson = new Gson();
+    public static final Gson GSON = new Gson();
 
     private WeatherService mWeatherService;
 
@@ -36,8 +37,10 @@ import java.util.logging.Logger;
      *
      * @return health stats for the service as a string
      */
+    @GET
+    @Path("/ping")
     @Override public String ping() {
-        return gson.toJson(mWeatherService.getPingData());
+        return GSON.toJson(mWeatherService.getPingData());
     }
 
     /**
@@ -48,8 +51,10 @@ import java.util.logging.Logger;
      * @param radiusString the radius in km
      * @return a list of atmospheric information
      */
-    @Override public Response weather(String iata, String radiusString) {
+    @GET
+    @Path("/weather/{iata}/{radius}")
+    @Override public Response weather(@PathParam("iata") String iata, @PathParam("radius") String radiusString) {
         return Response.status(Response.Status.OK)
-            .entity(mWeatherService.getWeather(iata, radiusString)).build();
+            .entity(GSON.toJson(mWeatherService.getWeather(iata, radiusString))).build();
     }
 }

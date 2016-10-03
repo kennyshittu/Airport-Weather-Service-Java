@@ -1,9 +1,11 @@
 package com.crossover.trial.weather;
 
 import com.crossover.trial.weather.daos.WeatherDao;
+import com.crossover.trial.weather.daos.WeatherDaoImpl;
 import com.crossover.trial.weather.controllers.WeatherCollectorEndpointImpl;
 import com.crossover.trial.weather.controllers.WeatherQueryEndpointImpl;
 import com.crossover.trial.weather.services.WeatherService;
+import com.crossover.trial.weather.services.WeatherServiceImpl;
 import org.glassfish.grizzly.Connection;
 import org.glassfish.grizzly.http.server.*;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
@@ -37,8 +39,8 @@ public class WeatherServer {
             resourceConfig.register(WeatherQueryEndpointImpl.class);
             resourceConfig.register(new AbstractBinder() {
                 @Override protected void configure() {
-                    bind(WeatherDao.class).to(WeatherDao.class);
-                    bind(WeatherService.class).to(WeatherService.class);
+                    bind(WeatherDaoImpl.class).to(WeatherDao.class);
+                    bind(WeatherServiceImpl.class).to(WeatherService.class);
                 }
             });
 

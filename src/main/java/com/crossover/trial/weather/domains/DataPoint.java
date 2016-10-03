@@ -8,17 +8,17 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  *
  * @author code test administrator
  */
-public class DataPoint {
+public final class DataPoint {
 
-    public double mean = 0.0;
+    public double mMean = 0.0;
 
-    public int first = 0;
+    public int mFirst = 0;
 
-    public int median = 0;
+    public int mMedian = 0;
 
-    public int last = 0;
+    public int mLast = 0;
 
-    public int count = 0;
+    public int mCount = 0;
 
     /**
      * private constructor, use the builder to create this object
@@ -35,58 +35,58 @@ public class DataPoint {
     }
 
     /**
-     * the mean of the observations
+     * the mMean of the observations
      */
     public double getMean() {
-        return mean;
+        return mMean;
     }
 
     public void setMean(double mean) {
-        this.mean = mean;
+        this.mMean = mean;
     }
 
     /**
      * 1st quartile -- useful as a lower bound
      */
     public int getFirst() {
-        return first;
+        return mFirst;
     }
 
     protected void setFirst(int first) {
-        this.first = first;
+        this.mFirst = first;
     }
 
     /**
-     * 2nd quartile -- median value
+     * 2nd quartile -- mMedian value
      */
     public int getMedian() {
-        return median;
+        return mMedian;
     }
 
     protected void setMedian(int median) {
-        this.median = median;
+        this.mMedian = median;
     }
 
     /**
      * 3rd quartile value -- less noisy upper value
      */
     public int getLast() {
-        return last;
+        return mLast;
     }
 
     protected void setLast(int last) {
-        this.last = last;
+        this.mLast = last;
     }
 
     /**
      * the total number of measurements
      */
     public int getCount() {
-        return count;
+        return mCount;
     }
 
     protected void setCount(int count) {
-        this.count = count;
+        this.mCount = count;
     }
 
     public String toString() {

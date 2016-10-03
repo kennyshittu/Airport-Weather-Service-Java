@@ -5,7 +5,7 @@ import com.crossover.trial.weather.domains.AirportData;
 /**
  * Created by Shittu on 01/10/2016.
  */
-public class WeatherUtils {
+public final class WeatherUtils {
     public static final double R = 6372.8;
 
     /**
@@ -22,6 +22,11 @@ public class WeatherUtils {
             .cos(ad1.getLatitude()) * Math.cos(ad2.getLatitude());
         double c = 2 * Math.asin(Math.sqrt(a));
         return R * c;
+    }
+
+    public static double checkAndSetRadius(String radius) {
+        return radius == null || radius.trim().isEmpty() ?
+            0 : Double.valueOf(radius);
     }
 
 }

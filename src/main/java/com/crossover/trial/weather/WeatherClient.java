@@ -73,11 +73,11 @@ public class WeatherClient {
 
     public void populate(String pointType, int first, int last, int mean, int median, int count) {
         WebTarget path = collect.path("/weather/BOS/" + pointType);
+        WebTarget path2 = collect.path("/weather/JFK/" + pointType);
         DataPoint dp = new DataPoint.Builder().withFirst(first).withLast(last).withMean(mean)
             .withMedian(median).withCount(count).build();
-        JSONObject jsonObj = new JSONObject( dp );
-        Response post = path.request().post(Entity.entity(jsonObj.toString(), "application/json"));
-
+        path.request().post(Entity.entity(dp, "application/json"));
+        path2.request().post(Entity.entity(dp, "application/json"));
     }
 
     public void exit() {

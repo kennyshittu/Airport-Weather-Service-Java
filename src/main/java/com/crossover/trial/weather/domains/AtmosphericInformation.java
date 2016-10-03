@@ -3,42 +3,42 @@ package com.crossover.trial.weather.domains;
 /**
  * encapsulates sensor information for a particular location
  */
-public class AtmosphericInformation {
+public final class AtmosphericInformation {
 
     /**
-     * temperature in degrees celsius
+     * mTemperature in degrees celsius
      */
-    private DataPoint temperature;
+    private DataPoint mTemperature;
 
     /**
-     * wind speed in km/h
+     * mWind speed in km/h
      */
-    private DataPoint wind;
+    private DataPoint mWind;
 
     /**
-     * humidity in percent
+     * mHumidity in percent
      */
-    private DataPoint humidity;
+    private DataPoint mHumidity;
 
     /**
-     * precipitation in cm
+     * mPrecipitation in cm
      */
-    private DataPoint precipitation;
+    private DataPoint mPrecipitation;
 
     /**
-     * pressure in mmHg
+     * mPressure in mmHg
      */
-    private DataPoint pressure;
+    private DataPoint mPressure;
 
     /**
      * cloud cover percent from 0 - 100 (integer)
      */
-    private DataPoint cloudCover;
+    private DataPoint mCloudCover;
 
     /**
-     * the last time this data was updated, in milliseconds since UTC epoch
+     * the mLast time this data was updated, in milliseconds since UTC epoch
      */
-    private long lastUpdateTime;
+    private long mLastUpdateTime;
 
     public AtmosphericInformation() {
 
@@ -46,68 +46,74 @@ public class AtmosphericInformation {
 
     protected AtmosphericInformation(DataPoint temperature, DataPoint wind, DataPoint humidity,
         DataPoint percipitation, DataPoint pressure, DataPoint cloudCover) {
-        this.temperature = temperature;
-        this.wind = wind;
-        this.humidity = humidity;
-        this.precipitation = percipitation;
-        this.pressure = pressure;
-        this.cloudCover = cloudCover;
-        this.lastUpdateTime = System.currentTimeMillis();
+        this.mTemperature = temperature;
+        this.mWind = wind;
+        this.mHumidity = humidity;
+        this.mPrecipitation = percipitation;
+        this.mPressure = pressure;
+        this.mCloudCover = cloudCover;
+        this.mLastUpdateTime = System.currentTimeMillis();
     }
 
     public DataPoint getTemperature() {
-        return temperature;
+        return mTemperature;
     }
 
     public void setTemperature(DataPoint temperature) {
-        this.temperature = temperature;
+        this.mTemperature = temperature;
     }
 
     public DataPoint getWind() {
-        return wind;
+        return mWind;
     }
 
     public void setWind(DataPoint wind) {
-        this.wind = wind;
+        this.mWind = wind;
     }
 
     public DataPoint getHumidity() {
-        return humidity;
+        return mHumidity;
     }
 
     public void setHumidity(DataPoint humidity) {
-        this.humidity = humidity;
+        this.mHumidity = humidity;
     }
 
     public DataPoint getPrecipitation() {
-        return precipitation;
+        return mPrecipitation;
     }
 
     public void setPrecipitation(DataPoint precipitation) {
-        this.precipitation = precipitation;
+        this.mPrecipitation = precipitation;
     }
 
     public DataPoint getPressure() {
-        return pressure;
+        return mPressure;
     }
 
     public void setPressure(DataPoint pressure) {
-        this.pressure = pressure;
+        this.mPressure = pressure;
     }
 
     public DataPoint getCloudCover() {
-        return cloudCover;
+        return mCloudCover;
     }
 
     public void setCloudCover(DataPoint cloudCover) {
-        this.cloudCover = cloudCover;
+        this.mCloudCover = cloudCover;
     }
 
     public long getLastUpdateTime() {
-        return this.lastUpdateTime;
+        return this.mLastUpdateTime;
     }
 
     public void setLastUpdateTime(long lastUpdateTime) {
-        this.lastUpdateTime = lastUpdateTime;
+        this.mLastUpdateTime = lastUpdateTime;
+    }
+
+    public boolean hasDataPoint() {
+        return this.getCloudCover() != null || this.getHumidity() != null
+            || this.getPrecipitation() != null || this.getPressure() != null
+            || this.getTemperature() != null || this.getWind() != null;
     }
 }

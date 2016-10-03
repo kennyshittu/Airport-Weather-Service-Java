@@ -1,12 +1,17 @@
 package com.crossover.trial.weather;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.Optional;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.io.*;
 
 /**
  * A simple airport loader which reads a file from disk and sends entries to the webservice
@@ -27,8 +32,9 @@ public class AirportLoader {
     public static final int ALT_INDEX = 8;
     public static final int TIMEZONE_INDEX = 9;
     public static final int DST_INDEX = 10;
-
+    public static final String SEPARATOR = ",";
     private static final String BASE_URI = "http://localhost:9090";
+    public static final String FILE_NAME = "airports.dat";
     /**
      * end point for read queries
      */
@@ -45,18 +51,27 @@ public class AirportLoader {
         collect = client.target(BASE_URI);
     }
 
-    public static void main(String args[]){
+    public static void main(String args[]) {
         try {
-            File airportDataFile = new File(
-                AirportLoader.class.getClassLoader().getResource("airports.dat").getPath());
-            if (!airportDataFile.exists() || airportDataFile.length() == 0) {
-                System.err.println(airportDataFile + " is not a valid input");
-                System.exit(1);
+            Optional<URL> fileUrl = Optional
+                .ofNullable(AirportLoader.class.getClassLoader().getResource(FILE_NAME));
+
+            if (fileUrl.isPresent()) {
+                File airportDataFile = new File(fileUrl.get().getPath());
+
+                if (!airportDataFile.exists() || airportDataFile.length() == 0) {
+                    System.err.println(airportDataFile + " is not a valid input");
+                    System.exit(1);
+                }
+
+                AirportLoader al = new AirportLoader();
+                al.upload(new FileInputStream(airportDataFile));
+                System.exit(0);
             }
-            AirportLoader al = new AirportLoader();
-            al.upload(new FileInputStream(airportDataFile));
-            System.exit(0);
-        } catch (Exception e){
+
+            System.err.println("airports.dat file not found in resources.");
+            System.exit(1);
+        } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
         }
@@ -64,15 +79,13 @@ public class AirportLoader {
 
     public void upload(InputStream airportDataStream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(airportDataStream));
-        String l = null;
-        String splitBy = ",";
+        String l;
         while ((l = reader.readLine()) != null) {
-            String[] b = l.split(splitBy);
-            WebTarget path = collect.path("/collect/airport/tesr/ts/ts");
-            Response post = path.request(MediaType.TEXT_PLAIN_TYPE)
-                .post(Entity.entity("A string entity to be POSTed", MediaType.TEXT_PLAIN));
-//            Response post = path.request().post(Entity.entity(null, "application/json"));
-            System.out.println("kenny shittu");
+            String[] b = l.split(SEPARATOR);
+            WebTarget path = collect.path(String
+                .format("/collect/airport/%s/%s/%s", b[IATA_INDEX], b[LAT_INDEX], b[LONG_INDEX])
+                .replace("\"", ""));
+            path.request().post(Entity.entity(null, "application/json"));
         }
     }
 }

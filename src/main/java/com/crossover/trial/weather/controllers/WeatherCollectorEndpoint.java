@@ -29,7 +29,7 @@ public interface WeatherCollectorEndpoint {
      *
      * @param iataCode the 3 letter airport code
      * @param pointType the point type, {@link DataPointType} for a complete list
-     * @param datapointJson a json dict containing mean, first, median, thrid and count keys
+     * @param datapointJson a json dict containing mMean, mFirst, mMedian, thrid and mCount keys
      *
      * @return HTTP Response code
      */

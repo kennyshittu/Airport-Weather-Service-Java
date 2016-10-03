@@ -9,12 +9,12 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  *
  * @author code test administrator
  */
-public class AirportData {
+public final class AirportData {
 
     /**
      * the three letter IATA code
      */
-    String iata;
+    String mIata;
 
     String icao;
 
@@ -23,14 +23,14 @@ public class AirportData {
     String country;
 
     /**
-     * latitude value in degrees
+     * mLatitude value in degrees
      */
-    double latitude;
+    double mLatitude;
 
     /**
-     * longitude value in degrees
+     * mLongitude value in degrees
      */
-    double longitude;
+    double mLongitude;
 
     double altitude;
 
@@ -44,27 +44,27 @@ public class AirportData {
     }
 
     public String getIata() {
-        return iata;
+        return mIata;
     }
 
     public void setIata(String iata) {
-        this.iata = iata;
+        this.mIata = iata;
     }
 
     public double getLatitude() {
-        return latitude;
+        return mLatitude;
     }
 
     public void setLatitude(double latitude) {
-        this.latitude = latitude;
+        this.mLatitude = latitude;
     }
 
     public double getLongitude() {
-        return longitude;
+        return mLongitude;
     }
 
     public void setLongitude(double longitude) {
-        this.longitude = longitude;
+        this.mLongitude = longitude;
     }
 
     public String toString() {
