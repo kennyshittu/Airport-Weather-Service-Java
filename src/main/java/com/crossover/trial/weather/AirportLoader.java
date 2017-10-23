@@ -15,37 +15,28 @@ import javax.ws.rs.client.WebTarget;
 
 /**
  * A simple airport loader which reads a file from disk and sends entries to the webservice
- * <p>
- * TODO: Implement the Airport Loader
  *
  * @author code test administrator
  */
-public class AirportLoader {
+class AirportLoader {
 
-    public static final int NAME_INDEX = 1;
-    public static final int CITY_INDEX = 2;
-    public static final int COUNTRY_INDEX = 3;
-    public static final int IATA_INDEX = 4;
-    public static final int ICAO_INDEX = 5;
-    public static final int LAT_INDEX = 6;
-    public static final int LONG_INDEX = 7;
-    public static final int ALT_INDEX = 8;
-    public static final int TIMEZONE_INDEX = 9;
-    public static final int DST_INDEX = 10;
-    public static final String SEPARATOR = ",";
+    private static final int IATA_INDEX = 4;
+    private static final int LAT_INDEX = 6;
+    private static final int LONG_INDEX = 7;
+    private static final String SEPARATOR = ",";
+    private static final String FILE_NAME = "airports.dat";
     private static final String BASE_URI = "http://localhost:9090";
-    public static final String FILE_NAME = "airports.dat";
     /**
      * end point for read queries
      */
-    private WebTarget query;
+    private final WebTarget query;
 
     /**
      * end point to supply updates
      */
-    private WebTarget collect;
+    private final WebTarget collect;
 
-    public AirportLoader() {
+    private AirportLoader() {
         Client client = ClientBuilder.newClient();
         query = client.target(BASE_URI + "/query");
         collect = client.target(BASE_URI);
@@ -66,18 +57,18 @@ public class AirportLoader {
 
                 AirportLoader al = new AirportLoader();
                 al.upload(new FileInputStream(airportDataFile));
-                System.exit(0);
+            } else {
+                System.err.println("airports.dat file not found in resources.");
+                System.exit(1);
             }
 
-            System.err.println("airports.dat file not found in resources.");
-            System.exit(1);
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
         }
     }
 
-    public void upload(InputStream airportDataStream) throws IOException {
+    private void upload(InputStream airportDataStream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(airportDataStream));
         String l;
         while ((l = reader.readLine()) != null) {

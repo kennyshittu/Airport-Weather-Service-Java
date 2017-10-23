@@ -1,15 +1,13 @@
 package com.crossover.trial.weather.controllers;
 
-import com.crossover.trial.weather.services.WeatherService;
-import com.google.gson.Gson;
-
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
-import java.util.logging.Logger;
 
+import com.crossover.trial.weather.services.WeatherService;
+import com.google.gson.Gson;
 
 /**
  * The Weather App REST endpoint allows clients to query, update and check health stats. Currently, all data is
@@ -19,41 +17,30 @@ import java.util.logging.Logger;
  */
 @Path("/query") public final class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
 
-    public final static Logger LOGGER = Logger.getLogger("WeatherQuery");
-
     /**
      * shared GSON json to object factory
      */
-    public static final Gson GSON = new Gson();
+    private static final Gson GSON = new Gson();
 
     private WeatherService mWeatherService;
 
-    @Inject public void setWeatherService(final WeatherService weatherService) {
+    @Inject
+    public void setWeatherService(final WeatherService weatherService) {
         this.mWeatherService = weatherService;
     }
 
-    /**
-     * Retrieve service health including total size of valid data points and request frequency information.
-     *
-     * @return health stats for the service as a string
-     */
     @GET
     @Path("/ping")
-    @Override public String ping() {
+    @Override
+    public String ping() {
         return GSON.toJson(mWeatherService.getPingData());
     }
 
-    /**
-     * Given a query in json format {'iata': CODE, 'radius': km} extracts the requested airport information and
-     * return a list of matching atmosphere information.
-     *
-     * @param iata the iataCode
-     * @param radiusString the radius in km
-     * @return a list of atmospheric information
-     */
     @GET
     @Path("/weather/{iata}/{radius}")
-    @Override public Response weather(@PathParam("iata") String iata, @PathParam("radius") String radiusString) {
+    @Override
+    public Response weather(@PathParam("iata") String iata,
+        @PathParam("radius") String radiusString) {
         return Response.status(Response.Status.OK)
             .entity(GSON.toJson(mWeatherService.getWeather(iata, radiusString))).build();
     }

@@ -1,6 +1,5 @@
 package com.crossover.trial.weather.domains;
 
-import com.crossover.trial.weather.utils.DstType;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -14,31 +13,17 @@ public final class AirportData {
     /**
      * the three letter IATA code
      */
-    String mIata;
-
-    String icao;
-
-    String city;
-
-    String country;
+    private String mIata;
 
     /**
      * mLatitude value in degrees
      */
-    double mLatitude;
+    private double mLatitude;
 
     /**
      * mLongitude value in degrees
      */
-    double mLongitude;
-
-    double altitude;
-
-    double timezone;
-
-    DstType dst;
-
-
+    private double mLongitude;
 
     public AirportData() {
     }
@@ -72,10 +57,8 @@ public final class AirportData {
     }
 
     public boolean equals(Object other) {
-        if (other instanceof AirportData) {
-            return ((AirportData) other).getIata().equals(this.getIata());
-        }
+        return other instanceof AirportData && ((AirportData) other).getIata()
+            .equals(this.getIata());
 
-        return false;
     }
 }

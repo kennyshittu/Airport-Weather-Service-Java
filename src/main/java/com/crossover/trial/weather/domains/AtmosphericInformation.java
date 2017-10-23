@@ -44,17 +44,6 @@ public final class AtmosphericInformation {
 
     }
 
-    protected AtmosphericInformation(DataPoint temperature, DataPoint wind, DataPoint humidity,
-        DataPoint percipitation, DataPoint pressure, DataPoint cloudCover) {
-        this.mTemperature = temperature;
-        this.mWind = wind;
-        this.mHumidity = humidity;
-        this.mPrecipitation = percipitation;
-        this.mPressure = pressure;
-        this.mCloudCover = cloudCover;
-        this.mLastUpdateTime = System.currentTimeMillis();
-    }
-
     public DataPoint getTemperature() {
         return mTemperature;
     }

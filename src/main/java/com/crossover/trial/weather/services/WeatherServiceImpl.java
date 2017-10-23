@@ -7,16 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import com.crossover.trial.weather.daos.WeatherDao;
-import com.crossover.trial.weather.daos.WeatherDaoImpl;
 import com.crossover.trial.weather.domains.AirportData;
 import com.crossover.trial.weather.domains.AtmosphericInformation;
 import com.crossover.trial.weather.domains.DataPoint;
 import com.crossover.trial.weather.utils.WeatherException;
 import com.crossover.trial.weather.utils.WeatherUtils;
-import org.glassfish.jersey.process.internal.RequestScoped;
 
 /**
  * Created by Shittu on 01/10/2016.
@@ -31,11 +28,13 @@ public final class WeatherServiceImpl implements WeatherService {
 
     private WeatherDao mWeatherDao;
 
-    @Inject public void setWeatherDao(WeatherDao weatherDao){
+    @Inject
+    public void setWeatherDao(WeatherDao weatherDao){
         this.mWeatherDao = weatherDao;
     }
 
-    @Override public List<AtmosphericInformation> getWeather(String iata, String radiusString) {
+    @Override
+    public List<AtmosphericInformation> getWeather(String iata, String radiusString) {
 
         double radius = WeatherUtils.checkAndSetRadius(radiusString);
 
@@ -52,7 +51,8 @@ public final class WeatherServiceImpl implements WeatherService {
         return retval;
     }
 
-    @Override public Map<String, Object> getPingData() {
+    @Override
+    public Map<String, Object> getPingData() {
 
         Map<String, Object> retval = new HashMap<>();
 
@@ -63,19 +63,20 @@ public final class WeatherServiceImpl implements WeatherService {
         return retval;
     }
 
-    @Override public Set<String> getAirportData() {
+    @Override
+    public Set<String> getAirportData() {
         Set<String> retval = new HashSet<>();
-        for (AirportData ad : WeatherDaoImpl.airportData) {
-            retval.add(ad.getIata());
-        }
+        mWeatherDao.getAirportData().stream().forEach(airportData -> retval.add(airportData.getIata()));
         return retval;
     }
 
-    @Override public AirportData addAirport(String iataCode, double latitude, double longitude) {
-        return WeatherDaoImpl.addAirport(iataCode, latitude, longitude);
+    @Override
+    public AirportData addAirport(String iataCode, double latitude, double longitude) {
+        return mWeatherDao.addAirport(iataCode, latitude, longitude);
     }
 
-    @Override public void addDataPoint(String iataCode, String pointType, DataPoint dp)
+    @Override
+    public void addDataPoint(String iataCode, String pointType, DataPoint dp)
         throws WeatherException {
         int airportDataIdx = mWeatherDao.getAirportDataIdx(iataCode);
         AtmosphericInformation ai = mWeatherDao.getAtmosphericInformation(airportDataIdx);
@@ -83,11 +84,13 @@ public final class WeatherServiceImpl implements WeatherService {
     }
 
 
-    @Override public AirportData findAirportData(String iataCode) {
+    @Override
+    public AirportData findAirportData(String iataCode) {
         return mWeatherDao.findAirportData(iataCode);
     }
 
-    @Override public void deleteAirport(String iataCode) {
+    @Override
+    public void deleteAirport(String iataCode) {
         mWeatherDao.deleteAirport(iataCode);
     }
 }

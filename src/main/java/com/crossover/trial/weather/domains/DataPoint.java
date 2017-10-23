@@ -10,15 +10,15 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public final class DataPoint {
 
-    public double mMean = 0.0;
+    private double mMean = 0.0;
 
-    public int mFirst = 0;
+    private int mFirst = 0;
 
-    public int mMedian = 0;
+    private int mMedian = 0;
 
-    public int mLast = 0;
+    private int mLast = 0;
 
-    public int mCount = 0;
+    private int mCount = 0;
 
     /**
      * private constructor, use the builder to create this object
@@ -41,7 +41,7 @@ public final class DataPoint {
         return mMean;
     }
 
-    public void setMean(double mean) {
+    private void setMean(double mean) {
         this.mMean = mean;
     }
 
@@ -52,7 +52,7 @@ public final class DataPoint {
         return mFirst;
     }
 
-    protected void setFirst(int first) {
+    private void setFirst(int first) {
         this.mFirst = first;
     }
 
@@ -63,7 +63,7 @@ public final class DataPoint {
         return mMedian;
     }
 
-    protected void setMedian(int median) {
+    private void setMedian(int median) {
         this.mMedian = median;
     }
 
@@ -74,7 +74,7 @@ public final class DataPoint {
         return mLast;
     }
 
-    protected void setLast(int last) {
+    private void setLast(int last) {
         this.mLast = last;
     }
 
@@ -85,7 +85,7 @@ public final class DataPoint {
         return mCount;
     }
 
-    protected void setCount(int count) {
+    private void setCount(int count) {
         this.mCount = count;
     }
 
@@ -94,6 +94,10 @@ public final class DataPoint {
     }
 
     public boolean equals(Object that) {
+        if (this == that)
+            return true;
+        if (that == null || getClass() != that.getClass())
+            return false;
         return this.toString().equals(that.toString());
     }
 

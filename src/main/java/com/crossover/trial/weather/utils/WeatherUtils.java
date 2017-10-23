@@ -6,7 +6,7 @@ import com.crossover.trial.weather.domains.AirportData;
  * Created by Shittu on 01/10/2016.
  */
 public final class WeatherUtils {
-    public static final double R = 6372.8;
+    private static final double EARTH_RADIUS = 6371.0;
 
     /**
      * Haversine distance between two airports.
@@ -21,12 +21,11 @@ public final class WeatherUtils {
         double a = Math.pow(Math.sin(deltaLat / 2), 2) + Math.pow(Math.sin(deltaLon / 2), 2) * Math
             .cos(ad1.getLatitude()) * Math.cos(ad2.getLatitude());
         double c = 2 * Math.asin(Math.sqrt(a));
-        return R * c;
+        return EARTH_RADIUS * c;
     }
 
     public static double checkAndSetRadius(String radius) {
         return radius == null || radius.trim().isEmpty() ?
             0 : Double.valueOf(radius);
     }
-
 }

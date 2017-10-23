@@ -1,0 +1,15 @@
+src/.DS_Store
+src/main/.DS_Store
+src/main/java/.DS_Store
+src/main/java/com/.DS_Store
+src/main/java/com/crossover/.DS_Store
+src/main/java/com/crossover/trial/.DS_Store
+src/main/java/com/crossover/trial/weather/.DS_Store
+src/test/.DS_Store
+src/test/java/.DS_Store
+src/test/java/com/.DS_Store
+src/test/java/com/crossover/.DS_Store
+src/test/java/com/crossover/trial/.DS_Store
+/weather.iml
+/.idea/
+/assignment.md
